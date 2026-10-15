@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { describeAccount, formatSol, getAccountInfo, validateAddress } from "./account-viewer.mjs";
+import {
+  describeAccount,
+  formatSol,
+  getAccountInfo,
+  getAccountResults,
+  validateAddress,
+} from "./account-viewer.mjs";
 
 const address = "11111111111111111111111111111111";
 
@@ -36,4 +42,43 @@ test("reads a valid RPC account response", async () => {
 
 test("explains an account with no onchain data", () => {
   assert.match(describeAccount(address, null), /no onchain data found yet/);
+});
+
+test("returns valid account data when another address is invalid", async () => {
+  let requestCount = 0;
+  const results = await getAccountResults(["not-an-address", address], {
+    fetchImpl: async () => {
+      requestCount += 1;
+      return {
+        ok: true,
+        json: async () => ({
+          result: { value: { lamports: 1_000_000_000, owner: address, executable: false } },
+        }),
+      };
+    },
+  });
+
+  assert.equal(requestCount, 1);
+  assert.match(results[0].error, /Invalid address/);
+  assert.match(results[1].output, /1 SOL/);
+});
+
+test("continues after an RPC failure for one address", async () => {
+  let requestCount = 0;
+  const results = await getAccountResults([address, address], {
+    fetchImpl: async () => {
+      if (requestCount++ === 0) {
+        throw new Error("network unavailable");
+      }
+      return {
+        ok: true,
+        json: async () => ({
+          result: { value: { lamports: 1_000_000_000, owner: address, executable: false } },
+        }),
+      };
+    },
+  });
+
+  assert.match(results[0].error, /network unavailable/);
+  assert.match(results[1].output, /1 SOL/);
 });

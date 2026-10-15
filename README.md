@@ -1,50 +1,85 @@
-# Build on Solana - University of Uyo
+# 10 Days Workshop With Solana
 
-Welcome! This repository is your guide to learning Solana development with the University of Uyo campus community. If you already build websites or apps, you can start here with your existing JavaScript or TypeScript skills. You do not need previous blockchain or Rust experience.
+A practical, beginner-friendly Solana learning path for builders in the University of Uyo community. The repository moves from wallet and account basics through transactions, tokens, Rust, Anchor programs, PDAs, and a full-stack project.
 
-You will learn by making small things first, then use those skills to build a project you can show. Work at your own pace between campus sessions, ask questions, and share what you make.
+You can follow the material at your own pace. Each curriculum section includes a challenge and a `SOLUTION.md` with guidance; try the challenge before consulting the solution.
 
 ## Start here
 
-1. Read the [curriculum guide](curriculum/README.md) to see the learning path.
-2. Begin with the [first workshop exercises](workshops/01-first-steps/README.md), then continue with [Week 0: setup and wallet basics](curriculum/week-00-setup/README.md). Bring a laptop with you.
-3. Make a GitHub repository for your work. Each weekly directory tells you what to build and how to check your result.
-4. Bring your questions, errors, and progress to our campus session. A working prototype is welcome, and so is a problem you have not solved yet.
+1. Read the [curriculum guide](curriculum/README.md) for the learning approach.
+2. Complete the [first workshop](workshops/01-first-steps/README.md), which includes a runnable JavaScript account viewer.
+3. Continue through the [weekly curriculum](#learning-path).
+4. Use the [project brief](templates/project-brief.md) to scope a small project of your own.
 
-You will need basic Git and JavaScript or TypeScript familiarity. The first exercise helps you check the rest of your setup.
+Basic familiarity with JavaScript or TypeScript, Git, and a terminal is helpful. Rust and Solana concepts are introduced as you progress.
 
 ## Learning path
 
-| Week | What you will learn | What you will build |
+| Section | Focus | Build |
 | --- | --- | --- |
-| [0](curriculum/week-00-setup/README.md) | Setup, networks, wallet basics | Your development setup and first devnet link |
-| [1](curriculum/week-01-accounts-rpc/README.md) | Accounts, programs, and RPC | A command-line account viewer |
-| [2](curriculum/week-02-transactions/README.md) | Transactions and signing | A devnet transaction flow |
-| [3](curriculum/week-03-tokens-wallet-ui/README.md) | Tokens and wallet connection | A wallet-connected web page |
-| [4](curriculum/week-04-rust/README.md) | Rust fundamentals | A tested Rust data model |
-| [5](curriculum/week-05-anchor/README.md) | Anchor programs | A program that stores and updates data |
-| [6](curriculum/week-06-pdas-security/README.md) | PDAs and account rules | Per-user state with failure tests |
-| [7](curriculum/week-07-full-stack/README.md) | Full-stack integration | A usable devnet app |
-| [8](curriculum/week-08-demo-day/README.md) | Presenting and continuing | A project demo and next-step plan |
+| [Week 0](curriculum/week-00-setup/README.md) | Setup, clusters, and wallet safety | A verified development setup |
+| [Week 1](curriculum/week-01-accounts-rpc/README.md) | Accounts, programs, and RPC | A multi-address account viewer |
+| [Week 2](curriculum/week-02-transactions/README.md) | Instructions, transactions, and confirmation | A reviewed devnet transaction flow |
+| [Week 3](curriculum/week-03-tokens-wallet-ui/README.md) | Tokens and wallet-connected UI | A page that displays devnet assets |
+| [Week 4](curriculum/week-04-rust/README.md) | Rust fundamentals | A tested Rust data model |
+| [Week 5](curriculum/week-05-anchor/README.md) | Anchor programs and persistent state | A locally tested program |
+| [Week 6](curriculum/week-06-pdas-security/README.md) | PDAs, constraints, and defensive programs | Protected per-user program state |
+| [Week 7](curriculum/week-07-full-stack/README.md) | Full-stack integration and transaction UX | An end-to-end devnet MVP |
+| [Week 8](curriculum/week-08-demo-day/README.md) | Demonstration and continuation | A reproducible project demo |
 
-Each week has a challenge and a reference solution. Try the challenge first; use the solution to compare your approach or get unstuck. There is usually more than one valid way to meet the requirements.
+## Run the account viewer
 
-## Build a project of your own
+The first workshop's CLI reads one or more account addresses from **devnet**. It uses Node.js 20 or newer and has no third-party package dependencies.
 
-The weekly exercises teach individual skills. Use the [project brief](templates/project-brief.md) to choose a user, describe the problem, and define a first version you can finish.
+From the workshop directory:
 
-An example is **Campus Kudos**: a simple app for sending a short appreciation message to another student. You could begin with a basic interface, then add a wallet connection and an onchain record as you learn. It is an example, not a required project.
+```bash
+cd workshops/01-first-steps
+node account-viewer.mjs "11111111111111111111111111111111|YOUR_PUBLIC_ADDRESS"
+```
 
-Your project can start as a rough prototype. A clear README, a few useful commits, and a working demo will show your progress.
+Separate addresses with `|` and quote the full list so the shell does not interpret the pipe as a command pipeline. The CLI prints a result or error for each address and continues if one lookup fails. It exits with a failure status if any address fails. A single address is also supported:
 
-## Learning resources
+```bash
+node account-viewer.mjs YOUR_PUBLIC_ADDRESS
+```
+
+To use another **devnet** RPC endpoint, set `SOLANA_DEVNET_RPC_URL`:
+
+```bash
+SOLANA_DEVNET_RPC_URL="https://your-devnet-rpc.example" node account-viewer.mjs "ADDRESS1|ADDRESS2"
+```
+
+Run the tests from the repository root:
+
+```bash
+node --test workshops/01-first-steps/account-viewer.test.mjs
+```
+
+The viewer performs read-only RPC requests. It does not connect to a wallet, sign, or submit transactions.
+
+## Repository layout
+
+- [`workshops/`](workshops/) — guided hands-on workshops and runnable examples.
+- [`curriculum/`](curriculum/) — weekly challenges and reference solutions.
+- [`templates/`](templates/) — prompts and templates for planning your own project.
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — guidelines for improving the learning materials.
+
+## Wallet and development safety
+
+- Share public addresses only. Never commit or share a seed phrase, private key, or keypair file.
+- Use devnet and disposable learning wallets for exercises.
+- Confirm the selected cluster, destination, amount, and requested authority before signing any transaction.
+- Treat RPC results and on-chain account data as untrusted input.
+
+## Resources
 
 - [Solana developer resources](https://solana.com/developers)
 - [Solana development courses](https://solana.com/developers/courses)
 - [Anchor documentation](https://www.anchor-lang.com/docs)
 
-Tooling changes over time, so use the versions and setup instructions shared for your cohort when you start an exercise.
+Tooling changes over time. Follow the versions and setup instructions recommended for your cohort when starting each exercise.
 
 ## Questions and contributions
 
-Ask questions in dedicated group chats, bring them to a campus session, or open a GitHub issue in this repository. If you find a confusing step, typo, or broken link, a [contribution](CONTRIBUTING.md) is welcome.
+Bring questions and work in progress to a campus session, or open an issue in the repository. If you find a confusing step, typo, or broken link, contributions are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).

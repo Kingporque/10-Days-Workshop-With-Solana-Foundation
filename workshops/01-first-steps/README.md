@@ -15,19 +15,27 @@ This workshop is for individual builders. You will create a practice wallet, ins
 
 ## Exercise 2 — Read an account with JavaScript
 
-From this directory, run:
+From this directory, run the script with one or more public addresses separated by `|`. Pass the full list as one quoted command-line argument so your shell passes the pipe character to the script instead of treating it as a shell pipeline. Spaces around addresses are okay:
 
 ```bash
-node account-viewer.mjs 11111111111111111111111111111111
+node account-viewer.mjs "11111111111111111111111111111111 | YOUR_ADDRESS"
 ```
 
-The example address is the System Program. Then run the script with your own **public** address:
+The first address is the System Program. Replace `YOUR_ADDRESS` with your own **public** address. A single address is also accepted:
 
 ```bash
 node account-viewer.mjs YOUR_ADDRESS
 ```
 
-Compare the script output with Solana Explorer. Find the balance in lamports and SOL, the account owner, and whether the account is executable. If your wallet has no activity yet, note how the script describes an account that does not exist onchain.
+The script reports each address separately. If one address is invalid or its RPC request fails, it still attempts the remaining addresses and reports an error for the failed one. The command exits with a failure status if any address fails, even if other lookups succeed. Compare the successful results with Solana Explorer. Find the balance in lamports and SOL, the account owner, and whether the account is executable. If your wallet has no activity yet, note how the script describes an account that does not exist onchain.
+
+You can use a different devnet RPC endpoint by setting `SOLANA_DEVNET_RPC_URL`:
+
+```bash
+SOLANA_DEVNET_RPC_URL="https://your-devnet-rpc.example" node account-viewer.mjs "ADDRESS1|ADDRESS2"
+```
+
+Only use an endpoint that points to devnet; the script and Explorer links are labeled for devnet.
 
 **Show your result:** your terminal output and the matching devnet explorer page.
 
@@ -37,18 +45,18 @@ Change one part of the output so a new student can understand it more easily. Id
 
 ## Before the next build night: your own challenge
 
-Turn the single-address viewer into a **devnet account watchlist**. This is your individual task after the workshop:
+Explore and customize the **devnet account watchlist**:
 
-1. Let the command accept **two or more public addresses**.
-2. Fetch each account and print a compact summary for each: address, SOL balance (or “not found”), owner, and whether it is executable.
-3. Keep a bad address or failed RPC request from hiding the results for the other addresses.
+1. Run the command with **two or more public addresses** separated by `|`.
+2. Check each account summary: address, SOL balance (or “not found”), owner, and whether it is executable.
+3. Try an invalid address in the list and confirm it does not hide the other results.
 4. Add a short `README.md` to your own repository with the command to run your watchlist and one thing you learned about the accounts you inspected.
 
 Try your own devnet address and the System Program address. Check both in Explorer. At the October 22 build night, bring your repository and show the command running, even if one part is still unfinished.
 
-**Done when:** one command displays results for at least two addresses, and a bad address produces a useful message without stopping the other result.
+**Done when:** one command displays results for at least two addresses, and a bad address produces a useful message without stopping the other result. For example: `node account-viewer.mjs "ADDRESS1|ADDRESS2"`.
 
-**Hint:** `process.argv.slice(2)` gives you all command-line arguments. You can reuse `getAccountInfo`, `describeAccount`, and `Promise.allSettled` from JavaScript. The [Week 1 challenge](../../curriculum/week-01-accounts-rpc/README.md) takes this further.
+**Hint:** `process.argv[2].split("|")` gives you the address list from the quoted argument. You can reuse `getAccountInfo` and `describeAccount`; handle each address separately so one failure does not stop the rest. The [Week 1 challenge](../../curriculum/week-01-accounts-rpc/README.md) takes this further.
 
 ## If something goes wrong
 

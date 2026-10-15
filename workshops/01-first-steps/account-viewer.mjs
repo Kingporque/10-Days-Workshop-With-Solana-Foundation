@@ -81,21 +81,41 @@ export function describeAccount(address, account) {
   return lines.join("\n");
 }
 
+export async function getAccountResults(addresses, options = {}) {
+  const results = [];
+  for (const address of addresses) {
+    try {
+      const account = await getAccountInfo(address, options);
+      results.push({ address, output: describeAccount(address, account) });
+    } catch (error) {
+      results.push({
+        address,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+  return results;
+}
+
 if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
   // Run this block only when called from the terminal, not when imported by tests.
-  const address = process.argv[2];
-  if (!address) {
-    console.error("Usage: node account-viewer.mjs PUBLIC_ADDRESS");
+  const addressList = process.argv[2];
+  if (!addressList) {
+    console.error('Usage: node account-viewer.mjs "PUBLIC_ADDRESS|PUBLIC_ADDRESS|..."');
     process.exitCode = 1;
   } else {
-    try {
-      const account = await getAccountInfo(address, {
-        rpcUrl: process.env.SOLANA_DEVNET_RPC_URL || DEFAULT_RPC_URL,
-      });
-      console.log(describeAccount(address, account));
-    } catch (error) {
-      console.error(error.message);
-      process.exitCode = 1;
+    const addresses = addressList.split("|").map((address) => address.trim());
+    const results = await getAccountResults(addresses, {
+      rpcUrl: process.env.SOLANA_DEVNET_RPC_URL || DEFAULT_RPC_URL,
+    });
+    for (const result of results) {
+      if ("error" in result) {
+        console.error(`Address: ${result.address || "(empty)"}\nError: ${result.error}`);
+        process.exitCode = 1;
+      } else {
+        console.log(result.output);
+      }
+      console.log("");
     }
   }
 }
