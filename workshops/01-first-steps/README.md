@@ -9,19 +9,19 @@ This workshop is for individual builders. You will create a practice wallet, ins
 1. Follow the [Solana Quick Start](https://solana.com/docs/intro/quick-start) to create a Solana Playground wallet and connect to **devnet**.
 2. Copy your **public address**. Do not copy or share your recovery phrase or private key.
 3. Open `https://explorer.solana.com/address/YOUR_ADDRESS?cluster=devnet`, replacing `YOUR_ADDRESS` with your public address.
-4. Get devnet test SOL through the Quick Start's faucet instructions. If the faucet is slow or rate limited, continue with Exercise 2 using the example address below.
+4. Get devnet test SOL through the Quick Start's faucet instructions. If the faucet is slow or rate limited, you can still continue with Exercise 2; an address does not need SOL to be queried.
 
 **Show your result:** your address page on Solana Explorer with devnet selected.
 
 ## Exercise 2 — Read an account with JavaScript
 
-From this directory, run the script with one or more public addresses separated by `|`. Pass the full list as one quoted command-line argument so your shell passes the pipe character to the script instead of treating it as a shell pipeline. Spaces around addresses are okay:
+You must provide at least one public address each time you run the script; it does not choose a default wallet address. If you run it without an address, it prints usage instructions and exits with an error. From this directory, pass one or more addresses separated by `|` as a quoted command-line argument so your shell passes the pipe character to the script instead of treating it as a shell pipeline. Spaces around addresses are okay:
 
 ```bash
-node account-viewer.mjs "11111111111111111111111111111111 | YOUR_ADDRESS"
+node account-viewer.mjs "YOUR_ADDRESS_1|YOUR_ADDRESS_2"
 ```
 
-The first address is the System Program. Replace `YOUR_ADDRESS` with your own **public** address. A single address is also accepted:
+Replace both placeholders with the public addresses you want to inspect; no particular address is built in. Keep the quotes around the complete list so the shell passes the `|` separator to the script instead of treating it as a command pipeline. A single address is also accepted:
 
 ```bash
 node account-viewer.mjs YOUR_ADDRESS
@@ -52,7 +52,7 @@ Explore and customize the **devnet account watchlist**:
 3. Try an invalid address in the list and confirm it does not hide the other results.
 4. Add a short `README.md` to your own repository with the command to run your watchlist and one thing you learned about the accounts you inspected.
 
-Try your own devnet address and the System Program address. Check both in Explorer. At the October 22 build night, bring your repository and show the command running, even if one part is still unfinished.
+Try any two public addresses on devnet and check them in Explorer. At the October 22 build night, bring your repository and show the command running, even if one part is still unfinished.
 
 **Done when:** one command displays results for at least two addresses, and a bad address produces a useful message without stopping the other result. For example: `node account-viewer.mjs "ADDRESS1|ADDRESS2"`.
 
@@ -63,7 +63,7 @@ Try your own devnet address and the System Program address. Check both in Explor
 - `node: command not found`: install Node.js 20+ or use a machine with Node installed.
 - `Invalid address`: copy the full public address without spaces or punctuation.
 - `HTTP 429` or a temporary RPC error: wait briefly and retry. The public devnet RPC is rate limited. A free-tier devnet RPC can be used by setting `SOLANA_DEVNET_RPC_URL`, but make sure it actually points to devnet.
-- Faucet unavailable: use the System Program address above for Exercise 2 and retry the faucet later.
+- Faucet unavailable: you can still inspect public addresses with Exercise 2 and retry the faucet later.
 
 ## Read more
 

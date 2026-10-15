@@ -29,25 +29,28 @@ Basic familiarity with JavaScript or TypeScript, Git, and a terminal is helpful.
 
 ## Run the account viewer
 
-The first workshop's CLI reads one or more account addresses from **devnet**. It uses Node.js 20 or newer and has no third-party package dependencies.
+The first workshop's CLI reads one or more account addresses from **devnet**. You must provide the public address or addresses to inspect every time you run it; the program has no default wallet address. If you omit the address, it prints usage instructions and exits with an error. It uses Node.js 20 or newer and has no third-party package dependencies.
 
-From the workshop directory:
-
-```bash
-cd workshops/01-first-steps
-node account-viewer.mjs "11111111111111111111111111111111|YOUR_PUBLIC_ADDRESS"
-```
-
-Separate addresses with `|` and quote the full list so the shell does not interpret the pipe as a command pipeline. The CLI prints a result or error for each address and continues if one lookup fails. It exits with a failure status if any address fails. A single address is also supported:
+Open a terminal in the repository's root directory and run:
 
 ```bash
-node account-viewer.mjs YOUR_PUBLIC_ADDRESS
+node workshops/01-first-steps/account-viewer.mjs "YOUR_ADDRESS_1|YOUR_ADDRESS_2"
 ```
+
+Replace both placeholders with the public addresses you want to inspect. Do not type the placeholders literally. Keep the quotes around the complete list so the shell does not interpret `|` as a command pipeline; without quotes, it may try to run the second address as a separate command.
+
+To inspect just one address, run:
+
+```bash
+node workshops/01-first-steps/account-viewer.mjs YOUR_PUBLIC_ADDRESS
+```
+
+The CLI prints a result or error for each address and continues if one lookup fails. It exits with a failure status if any address fails.
 
 To use another **devnet** RPC endpoint, set `SOLANA_DEVNET_RPC_URL`:
 
 ```bash
-SOLANA_DEVNET_RPC_URL="https://your-devnet-rpc.example" node account-viewer.mjs "ADDRESS1|ADDRESS2"
+SOLANA_DEVNET_RPC_URL="https://your-devnet-rpc.example" node workshops/01-first-steps/account-viewer.mjs "ADDRESS1|ADDRESS2"
 ```
 
 Run the tests from the repository root:
